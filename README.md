@@ -1,114 +1,130 @@
 # Resume Information Extractor
 
-## Overview
+## 📌 Project Overview
+The Resume Information Extractor is a web-based application that automatically extracts structured information from PDF resumes. It uses Python, NLP, and PDF parsing techniques to convert unstructured resume data into structured format.
 
-Resume Information Extractor is a web-based application that automatically extracts important information from resumes uploaded in PDF format. The system reduces manual effort by identifying and organizing candidate details into structured data.
+This project helps recruiters save time by automating resume screening and data extraction.
 
-## Features
+---
 
-* Upload resumes in PDF format
-* Extract candidate name
-* Extract email address
-* Extract phone number
-* Extract educational qualifications
-* Extract technical skills
-* Extract work experience
-* Display extracted information in a user-friendly interface
-* Fast and accurate resume parsing
+## 🎯 Features
 
-## Technologies Used
+- Upload resume in PDF format
+- Extract text from resumes using PyMuPDF
+- Extract structured information such as:
+  - Name
+  - Email
+  - Phone number
+  - Skills
+  - Education
+  - Work Experience
+  - Projects
+  - Certifications
+- Display extracted results in UI
+- Export data as JSON and CSV
+- Simple and user-friendly interface
+
+---
+
+## 🏗️ System Architecture
+
+User Upload → PDF Processing → Text Extraction → NLP/Regex Processing → Structured Data → UI Display → Export
+
+---
+
+## 🛠️ Tech Stack
 
 ### Backend
-
-* Python
-* Flask
-* PyMuPDF (fitz)
-* Regular Expressions (Regex)
+- Python
+- Flask / FastAPI
+- PyMuPDF
+- spaCy / Regex
+- Tesseract OCR (optional)
 
 ### Frontend
+- HTML
+- CSS
+- JavaScript
 
-* HTML5
-* CSS3
-* JavaScript
+---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
-Resume information extractor/
+Resume Information Extractor/
 │
 ├── backend/
-│   ├── app.py
-│   ├── extractor.py
-│   ├── requirements.txt
-│   └── uploads/
-│
+├── frontend/
+├── specs/
+├── .specify/
 ├── README.md
-├── CONTRIBUTING.md
-├── USER_MANUAL.md
-└── AGENTS.md
+├── SPECIFICATION.md
+├── PLAN.md
+├── TASKS.md
 ```
 
-## Installation
+---
 
-1. Clone the repository.
+## 🚀 Installation & Setup
 
+### 1. Clone Repository
 ```bash
 git clone https://code.swecha.org/vamshi_22/resume-information-extractor.git
-```
-
-2. Navigate to the project folder.
-
-```bash
 cd resume-information-extractor
 ```
 
-3. Create a virtual environment.
-
+### 2. Create Virtual Environment
 ```bash
 python -m venv venv
+venv\Scripts\activate   # Windows
 ```
 
-4. Activate the virtual environment.
-
-Windows
-
+### 3. Install Dependencies
 ```bash
-venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-Linux/macOS
-
+### 4. Run Project
 ```bash
-source venv/bin/activate
+python app.py
 ```
 
-5. Install dependencies.
+---
 
-```bash
-pip install -r backend/requirements.txt
+## 📊 Output Example
+
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "1234567890",
+  "skills": ["Python", "Machine Learning"],
+  "education": "B.Tech Computer Science",
+  "experience": "2 years"
+}
 ```
 
-6. Run the application.
+---
 
-```bash
-python backend/app.py
-```
+## ⚠️ Limitations
 
-## Usage
+- Works best with structured resumes
+- OCR accuracy may vary for scanned PDFs
+- Complex layouts may reduce extraction accuracy
 
-1. Open the application in your browser.
-2. Upload a resume in PDF format.
-3. Click the Extract button.
-4. View the extracted information.
+---
 
-## Future Enhancements
+## 🔮 Future Improvements
 
-* Support DOCX resumes
-* OCR support for scanned resumes
-* AI-based skill extraction
-* Resume ranking
-* Candidate database integration
+- AI-based entity recognition
+- Database integration
+- Multi-format support (DOCX, images)
+- Recruiter dashboard
+- Advanced ML model for better accuracy
 
-## Author
+---
 
-**Vamshi Bojana**
+## 👨‍💻 Author
+
+**Vamshi Bojana**  
+Resume Information Extractor Project  
