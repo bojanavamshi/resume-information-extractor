@@ -1,0 +1,7 @@
+flask
+pymupdf
+pdfminer.six
+python-dotenv
+pandas
+numpy
+regex
