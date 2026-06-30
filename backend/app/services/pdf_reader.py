@@ -22,6 +22,6 @@ def extract_text_from_pdf(pdf_path: str) -> str:
                 text += page_text + "\n"
         document.close()
     except Exception as e:
-        raise Exception(f"Error reading PDF: {e}") from e
+        raise RuntimeError(f"Error reading PDF: {e}") from e
 
     return text

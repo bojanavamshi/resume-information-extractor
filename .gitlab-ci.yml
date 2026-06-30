@@ -1,6 +1,7 @@
 stages:
   - format
   - lint
+  - modernization
   - type_check
   - test
   - coverage
@@ -29,6 +30,13 @@ lint:
     - ruff check backend tests
     - flake8 backend tests
     - pylint backend || true
+    - vulture backend
+
+pyupgrade:
+  <<: *default_python
+  stage: modernization
+  script:
+    - find backend tests -name "*.py" -print0 | xargs -0 pyupgrade --py310-plus --keep-runtime-typing
 
 type_check:
   <<: *default_python

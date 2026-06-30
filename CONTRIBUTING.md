@@ -27,8 +27,26 @@ Run the following before submitting changes:
 pytest
 ruff check backend tests
 ruff format --check backend tests
+pre-commit run pyupgrade --all-files
 mypy backend
 bandit -r backend -ll
+semgrep --config=auto --error --quiet backend
+vulture backend
+```
+
+Pre-commit runs formatting, modernization, security, and type-checking hooks. Install it once per checkout with `pre-commit install`, then run the full hook set with:
+
+```bash
+pre-commit run --all-files
+```
+
+## Release tags
+
+Create annotated semantic version tags for releases, keeping the tag aligned with pyproject.toml.
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
 ```
 
 ## Reporting issues

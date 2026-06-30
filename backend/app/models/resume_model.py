@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field
 
 
 class ResumeData(BaseModel):
+    """Structured information extracted from an uploaded resume."""
+
     name: str = ""
     email: str = ""
     phone: str = ""

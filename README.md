@@ -58,6 +58,7 @@ pre-commit install
 pytest
 ruff check backend tests
 ruff format --check backend tests
+pre-commit run pyupgrade --all-files
 mypy backend
 ```
 
@@ -78,6 +79,21 @@ docker compose up --build
 
 - Review the security policy in SECURITY.md.
 - Run Bandit, Semgrep, pip-audit, and Gitleaks in CI and locally.
+
+## Releases and Git Tags
+
+Releases use semantic version tags that match the project version in pyproject.toml, for example v1.0.0.
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+To publish all local tags:
+
+```bash
+git push origin --tags
+```
 
 ## Contributing
 
