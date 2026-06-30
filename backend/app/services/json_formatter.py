@@ -14,5 +14,5 @@ def format_resume_data(data: dict) -> ResumeData:
         education=data.get("education", []),
         experience=data.get("experience", []),
         projects=data.get("projects", []),
-        certifications=data.get("certifications", [])
+        certifications=data.get("certifications", []),
     )

@@ -1,14 +1,7 @@
 from flask import Flask
 
-def create_app():
+
+def create_app() -> Flask:
     app = Flask(__name__)
-
-    # Load config from environment
-    app.config['SECRET_KEY'] = 'local_secret_key'
-    app.config['UPLOAD_FOLDER'] = 'uploads/'
-
-    # Import routes (local only)
-    from backend import routes
-    app.register_blueprint(routes.bp)
-
+    app.config.update(SECRET_KEY="local_secret_key", UPLOAD_FOLDER="uploads/")
     return app

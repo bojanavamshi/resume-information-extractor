@@ -1,130 +1,89 @@
 # Resume Information Extractor
 
-## 📌 Project Overview
-The Resume Information Extractor is a web-based application that automatically extracts structured information from PDF resumes. It uses Python, NLP, and PDF parsing techniques to convert unstructured resume data into structured format.
+A production-ready FastAPI service for extracting structured candidate information from uploaded PDF resumes.
 
-This project helps recruiters save time by automating resume screening and data extraction.
+## Overview
 
----
+The Resume Information Extractor helps recruiters and hiring teams automate the first pass of resume review by extracting structured fields such as name, email, phone, skills, education, experience, projects, and certifications from PDF documents.
 
-## 🎯 Features
+## Features
 
-- Upload resume in PDF format
-- Extract text from resumes using PyMuPDF
-- Extract structured information such as:
-  - Name
-  - Email
-  - Phone number
-  - Skills
-  - Education
-  - Work Experience
-  - Projects
-  - Certifications
-- Display extracted results in UI
-- Export data as JSON and CSV
-- Simple and user-friendly interface
+- Upload PDF resumes through a REST endpoint
+- Extract structured candidate data from raw text
+- Return JSON-compatible payloads for downstream systems
+- Run locally or in Docker with a containerized API
+- Use automated quality gates for formatting, linting, typing, testing, and security
 
----
+## Project Structure
 
-## 🏗️ System Architecture
+- backend/: FastAPI application and parsing services
+- frontend/: Vite frontend for the upload experience
+- tests/: regression tests for parsing and formatting
+- specs/: specification, plan, and task documents
 
-User Upload → PDF Processing → Text Extraction → NLP/Regex Processing → Structured Data → UI Display → Export
+## Installation
 
----
+### Prerequisites
 
-## 🛠️ Tech Stack
+- Python 3.10+
+- pip
+- Docker (optional)
 
-### Backend
-- Python
-- Flask / FastAPI
-- PyMuPDF
-- spaCy / Regex
-- Tesseract OCR (optional)
+### Local setup
 
-### Frontend
-- HTML
-- CSS
-- JavaScript
-
----
-
-## 📂 Project Structure
-
-```
-Resume Information Extractor/
-│
-├── backend/
-├── frontend/
-├── specs/
-├── .specify/
-├── README.md
-├── SPECIFICATION.md
-├── PLAN.md
-├── TASKS.md
-```
-
----
-
-## 🚀 Installation & Setup
-
-### 1. Clone Repository
 ```bash
-git clone https://code.swecha.org/vamshi_22/resume-information-extractor.git
-cd resume-information-extractor
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt
 ```
 
-### 2. Create Virtual Environment
+### Run the API
+
 ```bash
-python -m venv venv
-venv\Scripts\activate   # Windows
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 3. Install Dependencies
+## API Usage
+
+### Upload a resume
+
 ```bash
-pip install -r requirements.txt
+curl -X POST "http://127.0.0.1:8000/resume/upload" -F "file=@sample.pdf"
 ```
 
-### 4. Run Project
+## Development
+
 ```bash
-python app.py
+pre-commit install
+pytest
+ruff check backend tests
+ruff format --check backend tests
+mypy backend
 ```
 
----
+## Testing
 
-## 📊 Output Example
-
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "1234567890",
-  "skills": ["Python", "Machine Learning"],
-  "education": "B.Tech Computer Science",
-  "experience": "2 years"
-}
+```bash
+pytest --cov=backend --cov-report=xml --cov-report=html
 ```
 
----
+## Docker
 
-## ⚠️ Limitations
+```bash
+docker build -t resume-information-extractor:latest .
+docker compose up --build
+```
 
-- Works best with structured resumes
-- OCR accuracy may vary for scanned PDFs
-- Complex layouts may reduce extraction accuracy
+## Security
 
----
+- Review the security policy in SECURITY.md.
+- Run Bandit, Semgrep, pip-audit, and Gitleaks in CI and locally.
 
-## 🔮 Future Improvements
+## Contributing
 
-- AI-based entity recognition
-- Database integration
-- Multi-format support (DOCX, images)
-- Recruiter dashboard
-- Advanced ML model for better accuracy
+See CONTRIBUTING.md for contribution guidelines.
 
----
+## License
 
-## 👨‍💻 Author
+This project is distributed under the AGPL-3.0-or-later license. See LICENSE for details.
 
-**Vamshi Bojana**  
-Resume Information Extractor Project  

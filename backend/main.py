@@ -1,14 +1,16 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.upload import router
 
 app = FastAPI(
-    title="Resume Information Extractor",
-    version="1.0",
-    description="Offline Resume Information Extractor using FastAPI"
+    title=os.getenv("API_TITLE", "Resume Information Extractor"),
+    version=os.getenv("API_VERSION", "1.0.0"),
+    description="Offline Resume Information Extractor using FastAPI",
 )
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -22,8 +24,7 @@ app.add_middleware(
 
 app.include_router(router)
 
+
 @app.get("/")
-def home():
-    return {
-        "message": "Resume Information Extractor API is Running"
-    }
+def home() -> dict[str, str]:
+    return {"message": "Resume Information Extractor API is Running"}

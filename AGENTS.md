@@ -2,72 +2,45 @@
 
 ## Project Overview
 
-Resume Information Extractor automatically extracts structured information from uploaded resumes using Python and PDF text extraction techniques.
-
-## Purpose
-
-The project aims to reduce manual data entry by extracting candidate information from resumes quickly and accurately.
+Resume Information Extractor is a FastAPI-based service that accepts uploaded resumes, extracts candidate information, and returns structured JSON data.
 
 ## Responsibilities
 
-### Backend Agent
+### Backend
 
-Responsible for:
+- Maintain the FastAPI upload endpoint and service modules.
+- Keep parsing logic modular and testable.
+- Ensure security, input validation, and resilient error handling.
 
-* PDF processing
-* Information extraction
-* API development
-* Error handling
+### Frontend
 
-### Frontend Agent
+- Keep the upload experience simple and reliable.
+- Present extracted results in a clear way.
+- Ensure the UI works with the API contract.
 
-Responsible for:
+### Testing
 
-* User interface
-* File upload
-* Displaying extracted information
-* User experience improvements
+- Add regression tests for parsing and formatting behavior.
+- Keep coverage above the configured threshold.
+- Validate new changes through local and CI quality checks.
 
-### Testing Agent
+### Documentation
 
-Responsible for:
+- Keep the README, manual, and contribution docs current.
+- Document installation, API usage, troubleshooting, and security practices.
 
-* Functional testing
-* Integration testing
-* Performance testing
-* Bug reporting
-
-### Documentation Agent
-
-Responsible for:
-
-* README updates
-* User Manual updates
-* Contribution guidelines
-* API documentation
-
-## Development Workflow
+## Workflow
 
 1. Create a feature branch.
-2. Implement changes.
-3. Test functionality.
-4. Commit changes.
-5. Submit Merge Request.
-6. Perform code review.
-7. Merge into the main branch.
+2. Implement the change.
+3. Add or update tests.
+4. Run the local checks.
+5. Open a merge request with evidence from CI.
 
-## Coding Guidelines
+## Coding expectations
 
-* Follow PEP 8.
-* Write modular functions.
-* Add meaningful comments.
-* Handle exceptions properly.
-* Keep code maintainable.
+- Follow PEP 8 and Ruff formatting.
+- Prefer small, typed functions.
+- Keep dependencies explicit and pinned where practical.
+- Document new configuration or environment changes.
 
-## Future Responsibilities
-
-* OCR integration
-* AI-based resume parsing
-* Skill categorization
-* Resume ranking
-* Cloud deployment

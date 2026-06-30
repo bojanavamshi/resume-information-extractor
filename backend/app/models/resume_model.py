@@ -1,13 +1,12 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, Field
 
 
 class ResumeData(BaseModel):
     name: str = ""
     email: str = ""
     phone: str = ""
-    skills: List[str] = []
-    education: List[str] = []
-    experience: List[str] = []
-    projects: List[str] = []
-    certifications: List[str] = []
+    skills: list[str] = Field(default_factory=list)
+    education: list[str] = Field(default_factory=list)
+    experience: list[str] = Field(default_factory=list)
+    projects: list[str] = Field(default_factory=list)
+    certifications: list[str] = Field(default_factory=list)

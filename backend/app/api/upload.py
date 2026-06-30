@@ -1,12 +1,12 @@
 import os
 import shutil
 
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile
 
-from app.services.pdf_reader import extract_text_from_pdf
-from app.services.text_cleaner import clean_text
 from app.services.ai_extractor import extract_resume_data
 from app.services.json_formatter import format_resume_data
+from app.services.pdf_reader import extract_text_from_pdf
+from app.services.text_cleaner import clean_text
 
 router = APIRouter(
     prefix="/resume",
@@ -19,12 +19,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 @router.post("/upload")
-async def upload_resume(file: UploadFile = File(...)):
+async def upload_resume(file: UploadFile | None = None):
     """
     Upload a resume PDF and extract information.
     """
 
-    if not file.filename.lower().endswith(".pdf"):
+    if file is None or file.filename is None or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(
             status_code=400,
             detail="Only PDF files are allowed."
@@ -53,8 +53,8 @@ async def upload_resume(file: UploadFile = File(...)):
             "data": result
         }
 
-    except Exception as e:
+    except Exception as exc:
         raise HTTPException(
             status_code=500,
-            detail=str(e)
-        )
+            detail=str(exc),
+        ) from exc

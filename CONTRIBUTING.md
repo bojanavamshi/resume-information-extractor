@@ -1,58 +1,41 @@
 # Contributing Guide
 
-Thank you for your interest in contributing to the Resume Information Extractor project.
+Thank you for contributing to the Resume Information Extractor project.
 
-## How to Contribute
+## Development setup
 
-1. Fork the repository.
-2. Create a new branch.
-
-```
-git checkout -b feature-name
-```
-
-3. Make your changes.
-4. Test your code.
-5. Commit your changes.
-
-```
-git commit -m "Add new feature"
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt
+pre-commit install
 ```
 
-6. Push your branch.
+## Workflow
 
+1. Create a branch for your change.
+2. Implement the feature or fix.
+3. Add or update tests where appropriate.
+4. Run the local quality checks.
+5. Open a merge request with a clear summary.
+
+## Quality checks
+
+Run the following before submitting changes:
+
+```bash
+pytest
+ruff check backend tests
+ruff format --check backend tests
+mypy backend
+bandit -r backend -ll
 ```
-git push origin feature-name
-```
 
-7. Create a Merge Request.
+## Reporting issues
 
-## Coding Standards
+Include the operating system, Python version, steps to reproduce, expected behavior, and actual behavior.
 
-* Write clean and readable code.
-* Follow Python coding standards (PEP 8).
-* Add comments where necessary.
-* Keep functions modular.
-* Avoid duplicate code.
+## Code of conduct
 
-## Testing
+Please follow the standards described in CODE_OF_CONDUCT.md.
 
-Before submitting changes:
-
-* Verify the application runs correctly.
-* Test resume extraction with multiple PDF files.
-* Ensure there are no syntax errors.
-
-## Reporting Issues
-
-When reporting bugs, include:
-
-* Operating System
-* Python version
-* Steps to reproduce
-* Expected behavior
-* Actual behavior
-
-## Feature Requests
-
-Feature suggestions are always welcome through GitLab Issues.

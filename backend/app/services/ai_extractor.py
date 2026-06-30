@@ -1,8 +1,11 @@
 import re
+
 import spacy
 
-# Load spaCy English model
-nlp = spacy.load("en_core_web_sm")
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:  # pragma: no cover - depends on local model availability
+    nlp = spacy.blank("en")
 
 
 # Common skills list
@@ -15,7 +18,7 @@ SKILLS = [
 ]
 
 
-def extract_resume_data(text: str):
+def extract_resume_data(text: str) -> dict[str, list[str] | str]:
     """
     Extract structured resume information.
     """
@@ -38,8 +41,22 @@ def extract_resume_data(text: str):
 
     for ent in doc.ents:
         if ent.label_ == "PERSON":
-            data["name"] = ent.text
+            candidate = ent.text.strip()
+            first_line = next((line.strip() for line in candidate.splitlines() if line.strip()), "")
+            if first_line:
+                data["name"] = first_line
             break
+
+    if not data["name"]:
+        for line in text.splitlines():
+            candidate = line.strip()
+            lowered = candidate.lower()
+            if candidate and not any(
+                token in lowered
+                for token in ["skills", "education", "experience", "project", "certification", "email", "phone"]
+            ):
+                data["name"] = candidate
+                break
 
     # -----------------------------
     # Email
@@ -154,17 +171,24 @@ def extract_resume_data(text: str):
     capture = False
 
     for line in text.split("\n"):
+        normalized = line.strip()
 
-        if "certification" in line.lower():
+        if "certification" in normalized.lower():
             capture = True
+            if ":" in normalized:
+                value = normalized.split(":", 1)[1].strip()
+                if value:
+                    certifications.append(value)
             continue
 
         if capture:
-
-            if line.strip() == "":
+            if normalized == "" or normalized.lower().startswith("experience"):
                 break
 
-            certifications.append(line.strip())
+            if normalized.lower().startswith("projects") or normalized.lower().startswith("skills"):
+                break
+
+            certifications.append(normalized)
 
     data["certifications"] = certifications
 

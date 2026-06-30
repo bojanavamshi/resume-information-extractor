@@ -2,76 +2,70 @@
 
 ## Introduction
 
-Resume Information Extractor allows users to upload resumes and automatically extract important candidate information.
+Resume Information Extractor helps users upload a PDF resume and receive structured candidate data through a web API.
 
-## System Requirements
+## Requirements
 
-* Windows, Linux, or macOS
-* Python 3.10+
-* Modern web browser
-* Internet connection (optional)
+- Python 3.10+
+- pip
+- Docker (optional)
 
-## Starting the Application
+## Installation
 
-Activate the virtual environment.
-
-Windows
-
-```
-venv\Scripts\activate
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt
 ```
 
-Run the application.
+## Running the API
 
+```bash
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
-python backend/app.py
-```
-
-Open your browser and visit the URL displayed in the terminal.
 
 ## Uploading a Resume
 
-1. Open the application.
-2. Click **Choose File**.
-3. Select a PDF resume.
-4. Click **Extract**.
+Send a PDF file to the upload endpoint:
 
-## Viewing Results
+```bash
+curl -X POST "http://127.0.0.1:8000/resume/upload" -F "file=@sample.pdf"
+```
 
-The application extracts:
+## Expected Output
 
-* Candidate Name
-* Email Address
-* Phone Number
-* Skills
-* Education
-* Experience
+The API returns structured data containing:
 
-The extracted information is displayed on the screen.
+- name
+- email
+- phone
+- skills
+- education
+- experience
+- projects
+- certifications
 
 ## Troubleshooting
 
 ### PDF not uploading
 
-* Ensure the file is a valid PDF.
-* Verify file size is within the supported limit.
+- Confirm the file is a valid PDF.
+- Ensure the request uses the file field named "file".
 
-### No information extracted
+### Empty or partial extraction
 
-* Check that the PDF contains selectable text.
-* Scanned PDFs may require OCR support.
+- Prefer text-based PDFs over scanned copies.
+- Check whether the resume contains clearly labeled sections.
 
-### Application not starting
+## Docker
 
-* Verify Python is installed.
-* Install dependencies using:
-
-```
-pip install -r backend/requirements.txt
+```bash
+docker build -t resume-information-extractor:latest .
+docker compose up --build
 ```
 
-## Best Practices
+## Security and support
 
-* Use text-based PDF resumes.
-* Keep resumes properly formatted.
-* Ensure contact information is clearly written.
+- Keep your environment variables in a local .env file.
+- Review SECURITY.md for vulnerability reporting guidance.
+

@@ -8,21 +8,17 @@ def clean_text(text: str) -> str:
     - Removes extra spaces
     - Removes extra blank lines
     - Removes tabs
+    - Trims indentation from each line
     """
 
     if not text:
         return ""
 
-    # Replace tabs with spaces
-    text = text.replace("\t", " ")
+    lines = []
+    for raw_line in text.splitlines():
+        line = raw_line.replace("\t", " ").strip()
+        line = re.sub(r" +", " ", line)
+        lines.append(line)
 
-    # Remove multiple spaces
-    text = re.sub(r" +", " ", text)
-
-    # Remove multiple blank lines
-    text = re.sub(r"\n\s*\n", "\n", text)
-
-    # Remove leading/trailing spaces
-    text = text.strip()
-
-    return text
+    cleaned = "\n".join(line for line in lines if line)
+    return cleaned.strip()
