@@ -9,8 +9,9 @@ BACKEND_DIR = ROOT / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.services.pdf_reader import extract_text_from_pdf  # noqa: E402
 from main import app  # noqa: E402
+
+from app.services.pdf_reader import extract_text_from_pdf  # noqa: E402
 
 client = TestClient(app)
 

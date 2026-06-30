@@ -8,10 +8,7 @@ from app.services.json_formatter import format_resume_data
 from app.services.pdf_reader import extract_text_from_pdf
 from app.services.text_cleaner import clean_text
 
-router = APIRouter(
-    prefix="/resume",
-    tags=["Resume"]
-)
+router = APIRouter(prefix="/resume", tags=["Resume"])
 
 UPLOAD_FOLDER = "app/uploads"
 
@@ -25,10 +22,7 @@ async def upload_resume(file: UploadFile | None = None):
     """
 
     if file is None or file.filename is None or not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(
-            status_code=400,
-            detail="Only PDF files are allowed."
-        )
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
 
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
 
@@ -48,10 +42,7 @@ async def upload_resume(file: UploadFile | None = None):
         # Convert to Resume Model
         result = format_resume_data(extracted_data)
 
-        return {
-            "status": "success",
-            "data": result
-        }
+        return {"status": "success", "data": result}
 
     except Exception as exc:
         raise HTTPException(

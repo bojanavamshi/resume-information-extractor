@@ -1,28 +1,23 @@
 import re
-
 import spacy
 
+# Load spaCy model safely
 try:
     nlp = spacy.load("en_core_web_sm")
-except OSError:  # pragma: no cover - depends on local model availability
+except OSError:
     nlp = spacy.blank("en")
 
 
-# Common skills list
 SKILLS = [
-    "Python", "Java", "C", "C++", "JavaScript", "HTML", "CSS",
-    "SQL", "MySQL", "MongoDB", "React", "Node.js", "Flask",
-    "FastAPI", "Django", "Git", "GitHub", "Machine Learning",
-    "Deep Learning", "Data Science", "Artificial Intelligence",
-    "TensorFlow", "PyTorch", "Pandas", "NumPy", "OpenCV"
+    "Python", "Java", "C", "C++", "JavaScript", "HTML", "CSS", "SQL",
+    "MySQL", "MongoDB", "React", "Node.js", "Flask", "FastAPI", "Django",
+    "Git", "GitHub", "Machine Learning", "Deep Learning", "Data Science",
+    "Artificial Intelligence", "TensorFlow", "PyTorch", "Pandas", "NumPy",
+    "OpenCV",
 ]
 
 
-def extract_resume_data(text: str) -> dict[str, list[str] | str]:
-    """
-    Extract structured resume information.
-    """
-
+def extract_resume_data(text: str) -> dict:
     data = {
         "name": "",
         "email": "",
@@ -31,165 +26,100 @@ def extract_resume_data(text: str) -> dict[str, list[str] | str]:
         "education": [],
         "experience": [],
         "projects": [],
-        "certifications": []
+        "certifications": [],
     }
 
-    # -----------------------------
-    # Name
-    # -----------------------------
-    doc = nlp(text)
-
-    for ent in doc.ents:
-        if ent.label_ == "PERSON":
-            candidate = ent.text.strip()
-            first_line = next((line.strip() for line in candidate.splitlines() if line.strip()), "")
-            if first_line:
-                data["name"] = first_line
-            break
-
-    if not data["name"]:
-        for line in text.splitlines():
-            candidate = line.strip()
-            lowered = candidate.lower()
-            if candidate and not any(
-                token in lowered
-                for token in ["skills", "education", "experience", "project", "certification", "email", "phone"]
-            ):
-                data["name"] = candidate
-                break
-
-    # -----------------------------
-    # Email
-    # -----------------------------
-    email = re.findall(
-        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
-        text
-    )
-
-    if email:
-        data["email"] = email[0]
-
-    # -----------------------------
-    # Phone Number
-    # -----------------------------
-    phone = re.findall(
-        r"(?:\+91[- ]?)?[6-9]\d{9}",
-        text
-    )
-
-    if phone:
-        data["phone"] = phone[0]
-
-    # -----------------------------
-    # Skills
-    # -----------------------------
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
     lower_text = text.lower()
 
-    found_skills = []
+    # ---------------- NAME ----------------
+    doc = nlp(text)
+    for ent in doc.ents:
+        if ent.label_ == "PERSON":
+            name = ent.text.strip()
+            if len(name.split()) <= 5:  # avoid long junk matches
+                data["name"] = name
+                break
 
-    for skill in SKILLS:
-        if skill.lower() in lower_text:
-            found_skills.append(skill)
+    if not data["name"] and lines:
+        for line in lines[:5]:
+            if not any(x in line.lower() for x in
+                       ["email", "phone", "skills", "experience", "project", "education"]):
+                data["name"] = line
+                break
 
-    data["skills"] = sorted(list(set(found_skills)))
+    # ---------------- EMAIL ----------------
+    email_match = re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text)
+    if email_match:
+        data["email"] = email_match.group()
 
-    # -----------------------------
-    # Education
-    # -----------------------------
+    # ---------------- PHONE ----------------
+    phone_match = re.search(r"(?:\+91[- ]?)?[6-9]\d{9}", text)
+    if phone_match:
+        data["phone"] = phone_match.group()
+
+    # ---------------- SKILLS ----------------
+    found_skills = {
+        skill for skill in SKILLS if skill.lower() in lower_text
+    }
+    data["skills"] = sorted(found_skills)
+
+    # ---------------- EDUCATION ----------------
     education_keywords = [
-        "B.Tech",
-        "B.E",
-        "Bachelor",
-        "M.Tech",
-        "M.E",
-        "Master",
-        "Degree",
-        "Intermediate",
-        "SSC",
-        "10th",
-        "12th"
+        "b.tech", "b.e", "bachelor", "m.tech", "m.e", "master",
+        "degree", "intermediate", "ssc", "10th", "12th"
     ]
 
-    education = []
+    data["education"] = [
+        line for line in lines
+        if any(k in line.lower() for k in education_keywords)
+    ]
 
-    for line in text.split("\n"):
-        for keyword in education_keywords:
-            if keyword.lower() in line.lower():
-                education.append(line.strip())
+    # ---------------- EXPERIENCE ----------------
+    data["experience"] = _extract_section(lines, "experience", stop_words=["projects", "education", "skills"])
 
-    data["education"] = education
+    # ---------------- PROJECTS ----------------
+    data["projects"] = _extract_section(lines, "project", stop_words=["experience", "education", "skills"])
 
-    # -----------------------------
-    # Experience
-    # -----------------------------
-    experience = []
-
+    # ---------------- CERTIFICATIONS ----------------
+    certs = []
     capture = False
 
-    for line in text.split("\n"):
+    for line in lines:
+        low = line.lower()
 
-        if "experience" in line.lower():
+        if "certification" in low:
             capture = True
+            parts = line.split(":", 1)
+            if len(parts) > 1:
+                certs.append(parts[1].strip())
             continue
 
         if capture:
-
-            if line.strip() == "":
+            if any(x in low for x in ["experience", "projects", "education", "skills"]):
                 break
+            certs.append(line)
 
-            experience.append(line.strip())
-
-    data["experience"] = experience
-
-    # -----------------------------
-    # Projects
-    # -----------------------------
-    projects = []
-
-    capture = False
-
-    for line in text.split("\n"):
-
-        if "project" in line.lower():
-            capture = True
-            continue
-
-        if capture:
-
-            if line.strip() == "":
-                break
-
-            projects.append(line.strip())
-
-    data["projects"] = projects
-
-    # -----------------------------
-    # Certifications
-    # -----------------------------
-    certifications = []
-
-    capture = False
-
-    for line in text.split("\n"):
-        normalized = line.strip()
-
-        if "certification" in normalized.lower():
-            capture = True
-            if ":" in normalized:
-                value = normalized.split(":", 1)[1].strip()
-                if value:
-                    certifications.append(value)
-            continue
-
-        if capture:
-            if normalized == "" or normalized.lower().startswith("experience"):
-                break
-
-            if normalized.lower().startswith("projects") or normalized.lower().startswith("skills"):
-                break
-
-            certifications.append(normalized)
-
-    data["certifications"] = certifications
+    data["certifications"] = certs
 
     return data
+
+
+# ---------------- HELPER FUNCTION ----------------
+def _extract_section(lines, start_keyword, stop_words):
+    capture = False
+    section = []
+
+    for line in lines:
+        low = line.lower()
+
+        if start_keyword in low:
+            capture = True
+            continue
+
+        if capture:
+            if any(word in low for word in stop_words):
+                break
+            section.append(line)
+
+    return section

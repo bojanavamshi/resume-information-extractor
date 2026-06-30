@@ -10,7 +10,6 @@ if str(BACKEND_DIR) not in sys.path:
 
 from main import app  # noqa: E402
 
-
 client = TestClient(app)
 
 

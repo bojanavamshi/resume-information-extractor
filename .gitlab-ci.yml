@@ -66,3 +66,8 @@ build:
   stage: build
   script:
     - docker build -t resume-information-extractor:latest .
+changelog:
+  stage: lint
+  script:
+    - pip install git-cliff
+    - git-cliff -o CHANGELOG.md
