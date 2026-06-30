@@ -2,6 +2,7 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.upload import router
 
@@ -11,6 +12,7 @@ app = FastAPI(
     description="Offline Resume Information Extractor using FastAPI",
 )
 
+# CORS (keep for safety during development)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -22,9 +24,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+# API routes
+app.include_router(router, prefix="/api")
 
 
-@app.get("/")
-def home() -> dict[str, str]:
+# ✅ IMPORTANT: Serve frontend (ONE URL FIX)
+app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
+
+
+@app.get("/api")
+def home():
     return {"message": "Resume Information Extractor API is Running"}
