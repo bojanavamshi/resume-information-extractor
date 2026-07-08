@@ -29,7 +29,7 @@ app.include_router(router, prefix="/api")
 
 
 # ✅ IMPORTANT: Serve frontend (ONE URL FIX)
-app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 @app.get("/api")
